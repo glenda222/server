@@ -2,8 +2,8 @@ package router
 
 import (
 	"net/http"
-	"server/healthcheck"
-	"server/middleware"
+	"./healthcheck"
+	"./middleware"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
