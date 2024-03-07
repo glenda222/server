@@ -11,7 +11,7 @@ import (
 	"math/rand"
 	"net/http"
 	"net/smtp"
-	"server/models"
+	"./models"
 	"strings"
 	"time"
 
