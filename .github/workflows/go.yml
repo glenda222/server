@@ -15,8 +15,13 @@ jobs:
       uses: actions/setup-go@v3
       with: 
         go-version: 1.20
-      env:
-        GOPATH: $HOME
+
+    - name: Set up Go environment
+      run: |
+       echo 'export GOPATH=$(Agent.BuildDirectory)/go' >> ~/.bashrc
+       echo 'export PATH=$GOPATH/bin:$PATH' >> ~/.bashrc
+       source ~/.bashrc
+       displayName: 'Set up Go environment'
    
     - name: Install dependencies
       run: go get .
