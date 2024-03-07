@@ -15,11 +15,8 @@ jobs:
       uses: actions/setup-go@v3
       with: 
         go-version: 1.20
-
-    - name: Set up Go environment
-      run: |
-        echo "GOPATH=C:\go" >> $GITHUB_ENV
-        echo "PATH=C:\go\bin;%PATH%" >> $GITHUB_ENV
+      env:
+        GOPATH: $HOME
    
     - name: Install dependencies
       run: go get .
