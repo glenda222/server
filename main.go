@@ -1,21 +1,23 @@
 package main
 import "github.com/gin-gonic/gin"
 import (
-	"fmt"
-	"log"
+	//"fmt"
+	//"log"
 	"net/http"
-	"os"
-	"server/router"
+	//"os"
+	//"server/router"
 )
 
 func main() {
-	r := router.Router()
+	router := gin.Default();
 
-	r.GET("/", func(ctx *gin.Context) {
+	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"Foo": "Bar" ,
 		})
 	})
+	
+	router.Run("localhost:8888")
 	
 	/*
 	r := router.Router()
