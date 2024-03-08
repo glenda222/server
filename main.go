@@ -1,5 +1,5 @@
 package main
-
+import "github.com/gin-gonic/gin"
 import (
 	"fmt"
 	"log"
@@ -9,6 +9,15 @@ import (
 )
 
 func main() {
+	r := router.Router()
+
+	r.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"Foo": "Bar" ,
+		})
+	})
+	
+	/*
 	r := router.Router()
 
 	//Azure app service sets the port in env, can be random
@@ -21,6 +30,7 @@ func main() {
 	log.Fatal(http.ListenAndServe("localhost:" + port, r)) // change later
 
 	//log.Fatal(http.ListenAndServe(":8888", r))
+ */
 	
 }
 
