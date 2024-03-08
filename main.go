@@ -5,7 +5,7 @@ import (
 	//"log"
 	"net/http"
 	"os"
-	//"server/router"
+	//"server/router"//test
 )
 
 func main() {
