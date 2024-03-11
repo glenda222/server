@@ -1,35 +1,32 @@
-name: Build go app and push to Azure on Linux
+name: Build go app and push to Linux Azure
+
 on: 
   push: 
     branches: [ main_linux ]
 
 jobs:
 
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps: 
-      - name: Cloning repository
-              uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+    
+    - name: Set up  Go
+      uses: actions/setup-go@v5
+      with: 
+        go-version: '1.20'
 
-      - name: Building web app
-          uses: azure/appservice-build@v3
-          with:
+    - name: Build
+      uses: azure/appservice-build@v3
+      with:
             platform: Golang
             platform-version: 1.19
-            source-directory: server
-            output-directory: server/build
-
-      # Log into Azure
-      - name: 'Login via Azure CLI'
-          uses: azure/login@v1
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-      - name: Deploying web app to Azure
-          uses: azure/webapps-deploy@v1
-          with:
-            app-name: 'mizuho-go-linux'
-            package: server/build
-
-
-
+            source-directory: go
+            output-directory: go/build
+    
+    - name: Deploy on Azure
+      uses: Azure/webapps-deploy@v2
+      with: 
+        app-name: mizuho-go-linux
+        package: build/
+        publish-profile: ${{ secrets.azureWebAppLinuxPublishProfile }}
