@@ -5,12 +5,13 @@ import (
 	//"log"
 	"net/http"
 	"os"
-	//"server/router"
+	"server/router"
 )
 
 func main() {
+	
 	router := gin.Default();
-
+	r := router.Router()
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"Foo": "Bar" ,
@@ -24,7 +25,9 @@ func main() {
 		port = "8888"
 	}
 	fmt.Println("Starting server on the port " + port)
-	router.Run("localhost:" + port)
+	r.Run("localhost:" + port)
+
+
 	
 	/*
 	r := router.Router()
