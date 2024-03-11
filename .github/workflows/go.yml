@@ -8,20 +8,27 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    steps: 
-    - uses: actions/checkout@v3
-    
-    - name: Set up  Go
-      uses: actions/setup-go@v5
-      with: 
-        go-version: '1.20'
+    steps:
+      - uses: jirutka/setup-alpine@v1
+        with:
+          branch: v3.15
 
-    - name: Build
-      run: go build -o build/app.exe -v
+      - run: cat /etc/alpine-release
+        shell: alpine.sh {0}
+        
+      - uses: actions/checkout@v3
     
-    - name: Deploy on Azure
-      uses: Azure/webapps-deploy@v2
-      with: 
-        app-name: mizuho-go-linux
-        package: build/
-        publish-profile: ${{ secrets.azureWebAppLinuxPublishProfile }}
+      - name: Set up  Go
+        uses: actions/setup-go@v5
+        with: 
+          go-version: '1.20'
+
+      - name: Build
+        run: CGO_ENABLED=0 GOOS=linux go build -o build/app.exe -v -a -ldflags 
+      
+      - name: Deploy on Azure
+        uses: Azure/webapps-deploy@v2
+        with: 
+          app-name: mizuho-go-linux
+          package: build/
+          publish-profile: ${{ secrets.azureWebAppLinuxPublishProfile }}
