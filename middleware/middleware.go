@@ -1052,7 +1052,10 @@ func deleteOneApplicationGroup(id primitive.ObjectID) (*mongo.DeleteResult, erro
 // #region Application
 func GetAllApplication(w http.ResponseWriter, r *http.Request) {
 	payload, err := getAllApplicationRecords()
-	if err != nil {
+fmt.Println("your at 1055")
+w.WriteHeader("hello hi")
+	/*
+if err != nil {
 		var resp ErrorResult
 		resp.Error.Message = err.Error()
 		json.NewEncoder(w).Encode(resp)
@@ -1060,7 +1063,7 @@ func GetAllApplication(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	} else {
 		json.NewEncoder(w).Encode(payload)
-	}
+	}*/
 }
 func GetApplication(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
