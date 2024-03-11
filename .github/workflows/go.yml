@@ -17,12 +17,7 @@ jobs:
         go-version: '1.20'
 
     - name: Build
-      uses: azure/appservice-build@v3
-      with:
-            platform: Golang
-            platform-version: 1.19
-            source-directory: go
-            output-directory: go/build
+      run: go build -o build/app.exe -v
     
     - name: Deploy on Azure
       uses: Azure/webapps-deploy@v2
