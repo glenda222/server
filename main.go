@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"net/http"
+	//"log"
+	//"net/http"
 
-	"server/router"
+	//"server/router"
 )
 
 // func main() {
