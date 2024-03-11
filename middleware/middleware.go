@@ -1051,7 +1051,7 @@ func deleteOneApplicationGroup(id primitive.ObjectID) (*mongo.DeleteResult, erro
 
 // #region Application
 func GetAllApplication(w http.ResponseWriter, r *http.Request) {
-	payload, err := getAllApplicationRecords()
+	//payload, err := getAllApplicationRecords()
 fmt.Println("your at 1055")
 w.WriteHeader("hello hi")
 	/*
