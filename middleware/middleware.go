@@ -29,7 +29,7 @@ import (
 // var connectionString = "mongodb://" + "persistentcma-mongo-NLB-6ec0965dd7647173.elb.us-east-1.amazonaws.com" + ":27017"
 // var connectionString = "mongodb://" + os.Getenv("MONGODB_IP") + ":27017"
 //var connectionString = "mongodb://localhost:27017"
-connectionString = "mongodb://cosmosdb-mizuho-eu-01:1uTuBuT8NibVNurOPw2fJRxVujOwwQtyG1LjtmbIR1JEVuAEYbC8hHuz3TqhMtp29nZvXzFXM2uqACDb7AWk0Q==@cosmosdb-mizuho-eu-01.mongo.cosmos.azure.com:10255/mizuhodevdb01?ssl=true&retryWrites=false"
+var connectionString = "mongodb://cosmosdb-mizuho-eu-01:1uTuBuT8NibVNurOPw2fJRxVujOwwQtyG1LjtmbIR1JEVuAEYbC8hHuz3TqhMtp29nZvXzFXM2uqACDb7AWk0Q==@cosmosdb-mizuho-eu-01.mongo.cosmos.azure.com:10255/mizuhodevdb01?ssl=true&retryWrites=false"
 
 // Database Name
 // const dbName = "ABCSBX"
