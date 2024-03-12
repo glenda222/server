@@ -33,7 +33,7 @@ var connectionString = "mongodb://cosmosdb-mizuho-eu-01:1uTuBuT8NibVNurOPw2fJRxV
 
 // Database Name
 // const dbName = "ABCSBX"
-const dbName = "mizuho_db"
+const dbName = "mizuhodevdb01"
 
 // Collection name
 const buColl = "Business_Unit"
