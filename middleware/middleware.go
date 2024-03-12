@@ -28,11 +28,17 @@ import (
 
 // var connectionString = "mongodb://" + "persistentcma-mongo-NLB-6ec0965dd7647173.elb.us-east-1.amazonaws.com" + ":27017"
 // var connectionString = "mongodb://" + os.Getenv("MONGODB_IP") + ":27017"
-//var connectionString = "mongodb://localhost:27017"
+
+// var connectionString = "mongodb://" + "persistentcma-mongo-NLB-6ec0965dd7647173.elb.us-east-1.amazonaws.com" + ":27017"
+
 var connectionString = "mongodb://cosmosdb-mizuho-eu-01:1uTuBuT8NibVNurOPw2fJRxVujOwwQtyG1LjtmbIR1JEVuAEYbC8hHuz3TqhMtp29nZvXzFXM2uqACDb7AWk0Q==@cosmosdb-mizuho-eu-01.mongo.cosmos.azure.com:10255/mizuhodevdb01?ssl=true&retryWrites=false"
+
+//var connectionString = "mongodb://cosmosdb-mizuho-eu-01:1uTuBuT8NibVNurOPw2fJRxVujOwwQtyG1LjtmbIR1JEVuAEYbC8hHuz3TqhMtp29nZvXzFXM2uqACDb7AWk0Q==@cosmosdb-mizuho-eu-01.mongo.cosmos.azure.com:10255/mizuhodevdb01?ssl=true&retryWrites=false"
+//var connectionString = "mongodb://localhost:27017"
 
 // Database Name
 // const dbName = "ABCSBX"
+// const dbName = "mizuho_db"
 const dbName = "mizuhodevdb01"
 
 // Collection name
@@ -1051,11 +1057,8 @@ func deleteOneApplicationGroup(id primitive.ObjectID) (*mongo.DeleteResult, erro
 
 // #region Application
 func GetAllApplication(w http.ResponseWriter, r *http.Request) {
-	//payload, err := getAllApplicationRecords()
-fmt.Println("your at line 1055 ")
-//w.WriteHeader("hello hi")
-	/*
-if err != nil {
+	payload, err := getAllApplicationRecords()
+	if err != nil {
 		var resp ErrorResult
 		resp.Error.Message = err.Error()
 		json.NewEncoder(w).Encode(resp)
@@ -1063,7 +1066,7 @@ if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 	} else {
 		json.NewEncoder(w).Encode(payload)
-	}*/
+	}
 }
 func GetApplication(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
@@ -1212,31 +1215,19 @@ func UpdateManyApplication(w http.ResponseWriter, r *http.Request) {
 }
 func getAllApplicationRecords() ([]primitive.M, error) {
 	var results []primitive.M
-
-	return results, nil
-}
-func getAllApplicationRecords_dum() ([]primitive.M, error) {
-	//var results []primitive.M
-	//qry := []bson.M{
+	qry := []bson.M{
 		// {
 		// 	"$match": bson.M{
 		// 		"type": "Application",
 		// 	},
 		// },
-		{
-			"$lookup": bson.M{
-				"from":         "Certify",
-				"localField":   "logids",
-				"foreignField": "_id",
-				"as":           "logs",
-			},
-		},
-		{
-			"$project": bson.M{
-				// "type":                 0,
-				"application_group_id": 0,
-			},
-		},
+		// {
+		// 	"$lookup": bson.M{
+		// 		"from":         "Application_Group",    // Child collection to join
+		// 		"localField":   "application_group_id", // Parent collection reference holding field
+		// 		"foreignField": "_id",                  // Child collection reference field
+		// 		"as":           "Application_Group",    // Arbitrary field name to store result set
+		// 	},
 		// },
 		// {
 		// 	"$unwind": bson.M{
@@ -1279,8 +1270,8 @@ func getOneApplication(id primitive.ObjectID) (primitive.M, error) {
 	qry := []bson.M{
 		{
 			"$match": bson.M{
-				// "type": "Application",
-				"_id": id,
+				"type": "Application",
+				"_id":  id,
 			},
 		},
 		// {
@@ -1360,13 +1351,13 @@ func updateManyApplication(Applications []models.ApplicationType) (*mongo.BulkWr
 		if v.Name != "" {
 			updateRec = append(updateRec, bson.E{Key: "name", Value: v.Name})
 		}
+		updateRec = append(updateRec, bson.E{Key: "updated", Value: time.Now()})
 		// if v.Application_Group_ID != primitive.NilObjectID {
 		// 	updateRec = append(updateRec, bson.E{Key: "application_group_id", Value: v.Application_Group_ID})
 		// }
-		// updateRec = append(updateRec, bson.E{Key: "type", Value: "Application"})
+		updateRec = append(updateRec, bson.E{Key: "type", Value: "Application"})
 		if v.Modified_By != "" {
 			updateRec = append(updateRec, bson.E{Key: "modified_by", Value: v.Modified_By})
-			updateRec = append(updateRec, bson.E{Key: "updated", Value: time.Now()})
 		}
 		if v.CMDB_ID != "" {
 			updateRec = append(updateRec, bson.E{Key: "CMDB_ID", Value: v.CMDB_ID})
@@ -1382,7 +1373,6 @@ func updateManyApplication(Applications []models.ApplicationType) (*mongo.BulkWr
 		}
 		if v.IT_Owner != "" {
 			updateRec = append(updateRec, bson.E{Key: "IT_Owner", Value: v.IT_Owner})
-			updateRec = append(updateRec, bson.E{Key: "Assigned_To", Value: v.IT_Owner})
 		}
 		if v.App_Business_Owner != "" {
 			updateRec = append(updateRec, bson.E{Key: "App_Business_Owner", Value: v.App_Business_Owner})
@@ -1397,88 +1387,6 @@ func updateManyApplication(Applications []models.ApplicationType) (*mongo.BulkWr
 			updateRec = append(updateRec, bson.E{Key: "Tower_Lead", Value: v.Tower_Lead})
 		} else {
 			updateRec = append(updateRec, bson.E{Key: "Tower_Lead", Value: "Other"})
-		}
-		if v.Status != "" {
-			updateRec = append(updateRec, bson.E{Key: "Status", Value: v.Status})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Status", Value: "Not Started"})
-		}
-		if v.Supports_SSO != "" {
-			updateRec = append(updateRec, bson.E{Key: "Supports_SSO", Value: v.Supports_SSO})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Supports_SSO", Value: "No"})
-		}
-
-		if v.In_App_Auth != "" {
-			updateRec = append(updateRec, bson.E{Key: "In_App_Auth", Value: v.In_App_Auth})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "In_App_Auth", Value: "No"})
-		}
-
-		if v.Birth_Right_Access != "" {
-			updateRec = append(updateRec, bson.E{Key: "Birth_Right_Access", Value: v.Birth_Right_Access})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Birth_Right_Access", Value: "No"})
-		}
-
-		if v.Birth_Right_Access_Criteria_Identified != "" {
-			updateRec = append(updateRec, bson.E{Key: "Birth_Right_Access_Criteria_Identified", Value: v.Birth_Right_Access_Criteria_Identified})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Birth_Right_Access_Criteria_Identified", Value: "No"})
-		}
-
-		if v.Centralized_Store_Authentication_Authorization != "" {
-			updateRec = append(updateRec, bson.E{Key: "Centralized_Store_Authentication_Authorization", Value: v.Centralized_Store_Authentication_Authorization})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Centralized_Store_Authentication_Authorization", Value: "No"})
-		}
-
-		if v.Multiple_Environments != "" {
-			updateRec = append(updateRec, bson.E{Key: "Multiple_Environments", Value: v.Multiple_Environments})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Multiple_Environments", Value: "No"})
-		}
-
-		if v.Account_Deletion_On_DeProvisioning != "" {
-			updateRec = append(updateRec, bson.E{Key: "Account_Deletion_On_DeProvisioning", Value: v.Account_Deletion_On_DeProvisioning})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Account_Deletion_On_DeProvisioning", Value: "No"})
-		}
-
-		if v.SOX_Status != "" {
-			updateRec = append(updateRec, bson.E{Key: "SOX_Status", Value: v.SOX_Status})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "SOX_Status", Value: "No"})
-		}
-		if v.Access_Certification_Tool != "" {
-			updateRec = append(updateRec, bson.E{Key: "Access_Certification_Tool", Value: v.Access_Certification_Tool})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Access_Certification_Tool", Value: "Sailpoint"})
-		}
-		if v.Access_Request_Tool != "" {
-			updateRec = append(updateRec, bson.E{Key: "Access_Request_Tool", Value: v.Access_Request_Tool})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Access_Request_Tool", Value: "Sailpoint"})
-		}
-		if v.Access_Provisioning_Tool != "" {
-			updateRec = append(updateRec, bson.E{Key: "Access_Provisioning_Tool", Value: v.Access_Provisioning_Tool})
-		}
-		if v.Access_Request_Approvals != "" {
-			updateRec = append(updateRec, bson.E{Key: "Access_Request_Approvals", Value: v.Access_Request_Approvals})
-		} else {
-			updateRec = append(updateRec, bson.E{Key: "Access_Request_Approvals", Value: "Manager and App Owner"})
-		}
-		if v.Authentication_Tool != "" {
-			updateRec = append(updateRec, bson.E{Key: "Authentication_Tool", Value: v.Authentication_Tool})
-		}
-		if v.MFA_Tool != "" {
-			updateRec = append(updateRec, bson.E{Key: "MFA_Tool", Value: v.MFA_Tool})
-		}
-		if v.Current_Sailpoint_Integraton_Method != "" {
-			updateRec = append(updateRec, bson.E{Key: "Current_Sailpoint_Integraton_Method", Value: v.Current_Sailpoint_Integraton_Method})
-		}
-		if v.Type != "" {
-			updateRec = append(updateRec, bson.E{Key: "type", Value: v.Type})
 		}
 
 		setUpdate := bson.D{{Key: "$set", Value: updateRec}}
@@ -1511,10 +1419,7 @@ func getAllApplicationRecordsByOwner(id string) ([]primitive.M, error) {
 			// 	},
 			// },
 			"$match": bson.M{"type": "Application",
-				"$or": []bson.M{
-					bson.M{"IT_Owner": id},
-					bson.M{"Technical_SME": id},
-				},
+				"IT_Owner": id,
 			},
 		},
 		// {
