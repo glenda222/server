@@ -1212,7 +1212,12 @@ func UpdateManyApplication(w http.ResponseWriter, r *http.Request) {
 }
 func getAllApplicationRecords() ([]primitive.M, error) {
 	var results []primitive.M
-	qry := []bson.M{
+
+	return results, nil
+}
+func getAllApplicationRecords_dum() ([]primitive.M, error) {
+	//var results []primitive.M
+	//qry := []bson.M{
 		// {
 		// 	"$match": bson.M{
 		// 		"type": "Application",
