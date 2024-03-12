@@ -11,7 +11,7 @@ import (
 func main() {
 
 	r := router.Router()
-	port := "8888"
+	port := "8080"
 	/*
 	//Azure app service sets the port in env, can be random
 	port := os.Getenv("HTTP_PLATFORM_PORT")
